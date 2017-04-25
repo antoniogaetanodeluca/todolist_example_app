@@ -41,6 +41,10 @@ var toDo = function(){
 
 document.addEventListener("DOMContentLoaded", function(e){
 
+  function addClass(el, className){
+
+  }
+
   var myApp = new toDo;
 
   var li, li_title, li_year, li_description, li_node, li_content;
@@ -52,13 +56,13 @@ document.addEventListener("DOMContentLoaded", function(e){
     e.preventDefault();
     var title_todo = document.getElementById("title_todo").value;
     var description_todo = document.getElementById("description_todo").value;
+    var form_todo = document.getElementById("form_todo");
 
     if( (title_todo.length >= 4) && (description_todo.length >= 5)){
       myApp.addToDo(title_todo, description_todo);
-      title_todo.value = "";
-      description_todo.value = "";
+    
     } else {
-      title_todo
+
     }
 
     console.log(myApp.getToDoList());
