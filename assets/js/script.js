@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function(e){
 
     if( (title_todo.length >= 4) && (description_todo.length >= 5)){
       myApp.addToDo(title_todo, description_todo);
-    
+      
     } else {
 
     }
