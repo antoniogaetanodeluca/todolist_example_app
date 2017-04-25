@@ -44,10 +44,10 @@ document.addEventListener("DOMContentLoaded", function(e){
     li_title = k.title;
     li_description = k.description;
     li_year = k.date[2];
-    li_content = "<div class='toto_item'><span class='date'>"+li_year+"</span> - <span class='title'>"+li_title+"<span class='description'>"+li_description+"</span></div>";
-    li_node = document.createTextNode(li_content);
-    li.appendChild(li_node);
+    li_content = "<div class='todo_item'><span class='date'>"+li_year+"</span><span class='title'><h2>"+li_title+"</h2></span><span class='description'><p>"+li_description+"</p></span></div>";
+    li.innerHTML = li_content;
+    ul_list.appendChild(li);
   });
-  ul_list.appendChild(li);
+
 
 });
