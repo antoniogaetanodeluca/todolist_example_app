@@ -23,7 +23,7 @@ var toDo = function(){
 
   return {
     getToDo: function(){
-      console.log(toDoObject);
+      
     },
     addToDo: function(todo){
       toDoObject.push(todo);
