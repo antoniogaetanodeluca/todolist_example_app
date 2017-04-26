@@ -40,7 +40,7 @@ var toDo = function(){
       li_title = k.title;
       li_description = k.description;
       li_year = k.date[2];
-      li_content = "<div class='todo_item'><span class='title'><h2>"+li_title+"</h2></span><span class='date'>"+li_year+"</span><span class='description'><p>"+li_description+"</p></span><button class='delete_todo btn btn-danger'>done</button><button class='restore btn btn-warning hidden'>restore</button></div>";
+      li_content = "<div class='todo_item'><span class='title'><h2>"+li_title+"</h2></span><span class='date'>"+li_year+"</span><span class='description'><p>"+li_description+"</p></span><button class='delete_todo btn btn-success'>done</button><button class='restore btn btn-warning hidden'>restore</button></div>";
       li.innerHTML = li_content;
       ul_list.appendChild(li);
     })
@@ -59,7 +59,7 @@ var toDo = function(){
         description: description_todo,
         date: [day, month, year]
       }
-      toDoObject.push(todo);
+      toDoObject.unshift(todo);
     },
 
     showToDoList: showToDoList
@@ -77,6 +77,7 @@ document.addEventListener("DOMContentLoaded", function(e){
   var submit_todo = document.getElementById("submit_todo");
   var delete_todo = document.getElementsByClassName("delete_todo");
 
+  // add new todo
   submit_todo.addEventListener("click", function(e){
     e.preventDefault();
     var title_todo = document.getElementById("title_todo").value;
@@ -96,6 +97,18 @@ document.addEventListener("DOMContentLoaded", function(e){
     }
     myApp.showToDoList();
   });
+
+  //mark a todo as done
+  document.getElementById("todo_list").addEventListener("click", function(e){
+    if(e.target.nodeName.toLowerCase() === "button"){
+      var x = e.target.parentElement.nodeName;
+      console.log(x);
+    }
+  });
+  // $(".delete_todo").on("click", function(e){
+  //   $(this).parents("li").toggleClass("completed");
+  // })
+
 
 
 
