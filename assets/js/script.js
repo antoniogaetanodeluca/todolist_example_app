@@ -6,22 +6,22 @@ var toDo = function(){
       day = data.getDay();
       month = data.getMonth();
 
-  var toDoObject = [
-    {
-      id: "123",
-      title: "First To Do",
-      description: "Lorem Ipsum dolor sit amet",
-      date: [day, month, year],
-      completed: false
-    },
-    {
-      id: "456",
-      title: "Second To Do",
-      description: "Lorem Ipsum dolor sit amet 2",
-      date: [day, month, year],
-      completed: false
-    }
-  ]
+  var toDoObject = [];
+
+  var callJson = function(){
+    $.ajax ({
+      url: 'json.php',
+      dataType: "json",
+      contentType: "application/json",
+      success: function (jsonData) {
+        toDoObject = jsonData;
+      },
+      error: function() {
+        console.log("error");
+      }
+    });
+    return toDoObject;
+  }
 
   var requiredField = function(field, className){
     if(field.classList.contains(className)){
@@ -34,13 +34,13 @@ var toDo = function(){
   var showToDoList = function(){
     var ul_list = document.getElementById("todo_list");
     ul_list.innerHTML = "";
-    var obj = toDoObject;
+    var obj = callJson();
     obj.forEach(function (k){
       li = document.createElement("li");
       li_title = k.title;
       li_description = k.description;
       li_year = k.date[2];
-      li_content = "<div class='todo_item'><span class='title'><h2>"+li_title+"</h2></span><span class='date'>"+li_year+"</span><span class='description'><p>"+li_description+"</p></span><button class='delete_todo btn btn-success'>done</button><button class='restore btn btn-warning hidden'>restore</button></div>";
+      li_content = "<div class='todo_item'><span class='title'><h2>"+li_title+"</h2></span><span class='date'>"+li_year+"</span><span class='description'><p>"+li_description+"</p></span><button class='delete_todo btn btn-success'><i class='fa fa-check' aria-hidden='true'></i> done</button><button class='restore btn btn-warning hidden'>restore</button></div>";
       li.innerHTML = li_content;
       ul_list.appendChild(li);
     })
@@ -62,7 +62,9 @@ var toDo = function(){
       toDoObject.unshift(todo);
     },
 
-    showToDoList: showToDoList
+    showToDoList: showToDoList,
+
+    callJson: callJson
   }
 
 }
@@ -108,6 +110,8 @@ document.addEventListener("DOMContentLoaded", function(e){
   // $(".delete_todo").on("click", function(e){
   //   $(this).parents("li").toggleClass("completed");
   // })
+
+  console.log(myApp.callJson());
 
 
 
