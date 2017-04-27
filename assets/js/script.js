@@ -8,33 +8,45 @@ var toDo = function(){
 
   var toDoObject = [];
 
-  var callJson = function(){
-    $.ajax ({
-      url: 'json.php',
-      dataType: "json",
-      contentType: "application/json",
-      success: function (jsonData) {
-        toDoObject = jsonData;
-      },
-      error: function() {
-        console.log("error");
+  var getTodoList = function(){
+    // $.ajax ({
+    //   url: 'json.php',
+    //   method: "GET",
+    //   async: true,
+    //   dataType: "json",
+    //   contentType: "application/json",
+    //   success: function (jsonData) {
+    //     toDoObject = jsonData;
+    //   }
+    // });
+    // return toDoObject;
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.open('GET', 'json.php', true);
+    httpRequest.onreadystatechange = function(){
+      if ( (httpRequest.readyState === XMLHttpRequest.DONE) && (httpRequest.status == 200) ){
+        var resp = httpRequest.responseText;
+        var obj = JSON.parse(resp);
+        console.log(obj);
       }
-    });
-    return toDoObject;
+    }
+
   }
 
-  var requiredField = function(field, className){
-    if(field.classList.contains(className)){
-      field.classList.remove(className);
-    } else {
-      field.classList.add(className);
-    }
-  }
+  // var requiredField = function(field, className){
+  //   if(field.classList.contains(className)){
+  //     field.classList.remove(className);
+  //   } else {
+  //     field.classList.add(className);
+  //   }
+  // }
 
   var showToDoList = function(){
+
     var ul_list = document.getElementById("todo_list");
+    var li, li_title, li_year, li_description, li_content;
     ul_list.innerHTML = "";
-    var obj = callJson();
+    var obj = getTodoList();
+
     obj.forEach(function (k){
       li = document.createElement("li");
       li_title = k.title;
@@ -43,28 +55,26 @@ var toDo = function(){
       li_content = "<div class='todo_item'><span class='title'><h2>"+li_title+"</h2></span><span class='date'>"+li_year+"</span><span class='description'><p>"+li_description+"</p></span><button class='delete_todo btn btn-success'><i class='fa fa-check' aria-hidden='true'></i> done</button><button class='restore btn btn-warning hidden'>restore</button></div>";
       li.innerHTML = li_content;
       ul_list.appendChild(li);
-    })
+    });
+
   }
 
   return {
-    getToDoList: function(){
-      return toDoObject;
-    },
 
     addToDo: function(title_todo, description_todo){
       id = Math.floor(Math.random() * 100);
-      var todo = {
+      var toDo = {
         id: id,
         title: title_todo,
         description: description_todo,
         date: [day, month, year]
       }
-      toDoObject.unshift(todo);
+      toDoObject.unshift(toDo);
     },
 
     showToDoList: showToDoList,
 
-    callJson: callJson
+    getTodoList: getTodoList
   }
 
 }
@@ -73,45 +83,56 @@ document.addEventListener("DOMContentLoaded", function(e){
 
   var myApp = new toDo;
 
-  myApp.showToDoList();
+  //console.log(myApp.getTodoList());
 
-  var li, li_title, li_year, li_description, li_node, li_content;
-  var submit_todo = document.getElementById("submit_todo");
-  var delete_todo = document.getElementsByClassName("delete_todo");
-
-  // add new todo
-  submit_todo.addEventListener("click", function(e){
-    e.preventDefault();
-    var title_todo = document.getElementById("title_todo").value;
-    var description_todo = document.getElementById("description_todo").value;
-    var form_todo = document.getElementById("form_todo");
-
-    if( (title_todo.length < 4) || (title_todo.value = "") ){
-      //requiredField(title_todo, "required");
-    } else if ( (description_todo.length < 4) || (description_todo.value = "") ){
-      //requiredField(description_todo, "required");
+  var httpRequest = new XMLHttpRequest();
+  httpRequest.open('GET', 'json.php', true);
+  httpRequest.onreadystatechange = function(){
+    if ( (httpRequest.readyState === 4) && (httpRequest.status == 200) ){
+      var resp = httpRequest.responseText;
+      var obj = JSON.parse(resp);
+      console.log(obj);
     } else {
-      //requiredField(title_todo, "required");
-      //requiredField(description_todo, "required");
-      myApp.addToDo(title_todo, description_todo);
-      title_todo.value = "";
-      description_todo.value = "";
+      console.log("errore");
     }
-    myApp.showToDoList();
-  });
+  }
 
-  //mark a todo as done
-  document.getElementById("todo_list").addEventListener("click", function(e){
-    if(e.target.nodeName.toLowerCase() === "button"){
-      var x = e.target.parentElement.nodeName;
-      console.log(x);
-    }
-  });
+
+  // var submit_todo = document.getElementById("submit_todo");
+  // var delete_todo = document.getElementsByClassName("delete_todo");
+  //
+  // // add new todo
+  // submit_todo.addEventListener("click", function(e){
+  //   e.preventDefault();
+  //   var title_todo = document.getElementById("title_todo").value;
+  //   var description_todo = document.getElementById("description_todo").value;
+  //   var form_todo = document.getElementById("form_todo");
+  //
+  //   if( (title_todo.length < 4) || (title_todo.value = "") ){
+  //     //requiredField(title_todo, "required");
+  //   } else if ( (description_todo.length < 4) || (description_todo.value = "") ){
+  //     //requiredField(description_todo, "required");
+  //   } else {
+  //     //requiredField(title_todo, "required");
+  //     //requiredField(description_todo, "required");
+  //     myApp.addToDo(title_todo, description_todo);
+  //     title_todo.value = "";
+  //     description_todo.value = "";
+  //   }
+  //   myApp.showToDoList();
+  // });
+  //
+  // //mark a todo as done
+  // document.getElementById("todo_list").addEventListener("click", function(e){
+  //   if(e.target.nodeName.toLowerCase() === "button"){
+  //     var x = e.target.parentElement.nodeName;
+  //     console.log(x);
+  //   }
+  // });
   // $(".delete_todo").on("click", function(e){
   //   $(this).parents("li").toggleClass("completed");
   // })
 
-  console.log(myApp.callJson());
 
 
 
