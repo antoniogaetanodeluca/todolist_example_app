@@ -15,9 +15,6 @@ form {
     &.required {
       border: 1px solid red;
     }
-    &#submit_todo {
-      min-width: 165px;
-    }
   }
   textarea {
     width: 100%;
@@ -29,6 +26,14 @@ form {
     &.required {
       border: 1px solid red;
     }
+  }
+  button {
+    width: 100%;
+    font-size: 14px;
+    text-transform: uppercase;
+    margin: 30px 0;
+    border-radius: 0!important;
+    padding: 10px 0;
   }
 }
 
@@ -44,13 +49,26 @@ form {
 
     h2 {
       font-size: 18px;
+      text-transform: uppercase;
     }
-    
+
     &:nth-child(even){
       background-color: #f2f2f2;
     }
+
     &.completed {
       background: yellow;
+      & > .todo_item {
+        span.text-completed {
+          text-decoration: line-through;
+        }
+      }
+    }
+
+    .todo_item {
+      button {
+        margin-right: 20px;
+      }
     }
   }
 }
