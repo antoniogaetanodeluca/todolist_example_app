@@ -82,23 +82,35 @@ var toDo = function(){
     }
   };
 
-  var toDoCompleted = function(id){
+  var toDoCompleted = function(id, state){
     try {
       var obj = getTodoList();
       obj.forEach(function(k){
         if(id == k.id){
-          //k.completed = true;
-          var toDoCompleted = {
-            id: id,
-            title: k.title,
-            descriprion: k.descriprion,
-            date: k.date,
-            completed: true
+          if(state === "completed"){
+            var toDoCompleted = {
+              id: id,
+              title: k.title,
+              descriprion: k.descriprion,
+              date: k.date,
+              completed: true
+            }
+          } else {
+            var toDoCompleted = {
+              id: id,
+              title: k.title,
+              descriprion: k.descriprion,
+              date: k.date,
+              completed: false
+            }
           }
           $.ajax({
             method: "POST",
             data: {json: JSON.stringify(toDoCompleted)},
             url: "json.php",
+            success: function(jsonresponse){
+              console.log(jsonresponse);
+            },
             error: function(){
               console.log("error!");
             }
@@ -135,7 +147,7 @@ document.addEventListener("DOMContentLoaded", function(e){
     var description_todo = document.getElementById("description_todo").value;
     var form_todo = document.getElementById("form_todo");
 
-    if( (title_todo.length < 4) || (title_todo.value = "") ){
+    if( (title_todo.length < 3) || (title_todo.value = "") ){
       //requiredField(title_todo, "required");
     } else if ( (description_todo.length < 4) || (description_todo.value = "") ){
       //requiredField(description_todo, "required");
@@ -160,8 +172,10 @@ document.addEventListener("DOMContentLoaded", function(e){
     var state = null;
     if($(this).parents("li").hasClass("completed")){
       state = "completed";
+      $(this).text("modify")
     } else {
       state = "uncompleted";
+      $(this).text("done");
     }
     myApp.toDoCompleted(toDo_id, state);
   });

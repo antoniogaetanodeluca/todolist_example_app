@@ -1,5 +1,6 @@
 body {
-  background: #fff; }
+  background: #fff;
+}
 
 form input {
   width: 100%;
@@ -7,35 +8,44 @@ form input {
   padding: 7px 10px;
   margin: 30px 0;
   border: 1px solid #8C8B88;
-  font-size: 18px; }
-  form input.required {
-    border: 1px solid red; }
-  form input#submit_todo {
-    min-width: 165px; }
+  font-size: 18px;
+}
+form input.required {
+  border: 1px solid red;
+}
+form input#submit_todo {
+  min-width: 165px;
+}
 form textarea {
   width: 100%;
   height: 400px;
   border: 1px solid #8C8B88;
   resize: none;
   padding: 7px 10px;
-  font-size: 16px; }
-  form textarea.required {
-    border: 1px solid red; }
+  font-size: 16px;
+}
+form textarea.required {
+  border: 1px solid red;
+}
 
 .ul_reset {
   margin: 0;
   padding: 0;
-  list-style-type: none; }
-  .ul_reset li {
-    display: flex;
-    padding: 20px;
-    margin: 30px 0; }
-    .ul_reset li h2 {
-      font-size: 18px; }
-    .ul_reset li:nth-child(even) {
-      background-color: #f2f2f2; }
-    .ul_reset li.completed {
-      background: yellow;
-      border: 1px solid orange; }
+  list-style-type: none;
+}
+.ul_reset li {
+  display: flex;
+  padding: 20px;
+  margin: 30px 0;
+}
+.ul_reset li h2 {
+  font-size: 18px;
+}
+.ul_reset li:nth-child(even) {
+  background-color: #f2f2f2;
+}
+.ul_reset li.completed {
+  background: yellow;
+}
 
 /*# sourceMappingURL=style.css.map */
