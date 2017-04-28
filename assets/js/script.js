@@ -88,6 +88,11 @@ var toDo = function(){
         if(toDoObject[i].id == id){
           toDoObject.splice(i, 1);
           $("#todo_list").find("li#" + id).remove();
+          if($("#todo_list").find("li").length === 0){
+            $("#todo_list").text("Nothing to do. Take you first note, now!");
+            $("#submit_todo").removeAttr("disabled");
+            $("#hide_completed_todo").addClass("hidden");
+          }
         }
       }
     } catch(e) {
@@ -184,23 +189,14 @@ document.addEventListener("DOMContentLoaded", function(e){
     var description_todo = document.getElementById("description_todo").value;
     var form_todo = document.getElementById("form_todo");
     if( (title_todo.length < 3) || (title_todo.value = "") ){
-      //requiredField(title_todo, "required");
+      // here a function that checks for required inputs
     } else if ( (description_todo.length < 4) || (description_todo.value = "") ){
-      //requiredField(description_todo, "required");
+      // here a function that checks for required inputs
     } else {
-      //requiredField(title_todo, "required");
-      //requiredField(description_todo, "required");
       myApp.addToDo(title_todo, description_todo);
     }
     myApp.showToDoList();
   });
-
-  //mark a todo as done
-  // document.getElementById("todo_list").addEventListener("click", function(e){
-  //   if( (e.target.nodeName.toLowerCase() === "button") && (e.target.className === "delete_todo") ){
-  //    console.log("test");
-  //   }
-  // });
 
   $("#todo_list").on("click", ".delete_todo", function(e){
     var toDo_id = $(this).parents("li").attr("id");
