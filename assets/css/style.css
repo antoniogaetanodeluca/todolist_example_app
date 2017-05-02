@@ -1,3 +1,7 @@
+h1 {
+  color: #FE5F55;
+}
+
 body {
   background: #fff;
 }
@@ -41,13 +45,14 @@ body {
   display: flex;
   padding: 20px;
   margin: 30px 0;
+  background-color: #EEF5DB;
 }
 #wrapper .ul_reset li h2 {
   font-size: 18px;
   text-transform: uppercase;
 }
 #wrapper .ul_reset li:nth-child(even) {
-  background-color: #f2f2f2;
+  background-color: #C7EFCF;
 }
 #wrapper .ul_reset li.completed {
   background: yellow;
@@ -65,8 +70,10 @@ body {
 
 button {
   border-radius: 0 !important;
-  padding: 15px 0;
-  margin: 30px 0;
+  padding-top: 9px !important;
+  padding-bottom: 9px !important;
+  margin-top: 30px !important;
+  margin-bottom: 30px !important;
 }
 
 /*# sourceMappingURL=style.css.map */

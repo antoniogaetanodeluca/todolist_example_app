@@ -55,7 +55,7 @@ var toDo = function(){
         li_title = k.title;
         li_description = k.description;
         li_year = k.date[2];
-        li_content = "<div class='todo_item'><span class='title'><h2>"+li_title+"</h2></span><span class='date'>"+li_year+"</span><span class='description'><p>"+li_description+"</p></span><button class='delete_todo btn btn-success'><i class='fa fa-check' aria-hidden='true'></i><span class='cta-text'> done</span></button><button class='drop_todo btn btn-danger hidden'>delete</button></div>";
+        li_content = "<div class='todo_item'><span class='title'><h2>"+li_title+"</h2></span><span class='date'>"+li_year+"</span><span class='description'><p>"+li_description+"</p></span><button class='delete_todo btn btn-success'><i class='fa fa-check' aria-hidden='true'></i><span class='cta-text'> done</span></button><button class='drop_todo btn btn-danger hidden'>delete</button> <button class='cancel_cta btn btn-default hidden'>cancel</button></div>";
         li.innerHTML = li_content;
         ul_list.appendChild(li);
       });
@@ -198,13 +198,13 @@ var toDo = function(){
   }
 
   return {
-    addToDo: addToDo, // add a todo
-    deleteToDo: deleteToDo, // delete a todo
-    showToDoList: showToDoList, // show the todo list
+    addToDo: addToDo,
+    deleteToDo: deleteToDo,
+    showToDoList: showToDoList,
     getTodoList: getTodoList,
     toDoCompleted: toDoCompleted,
     toggleCompleted: toggleCompleted,
-    checkFields: checkFields // check if every input are validated
+    checkFields: checkFields
   }
 
 }
@@ -212,16 +212,16 @@ var toDo = function(){
 document.addEventListener("DOMContentLoaded", function(e){
 
   var myApp = new toDo;
+  var submit_todo = document.getElementById("submit_todo"),
+      delete_todo = document.getElementsByClassName("delete_todo"),
+      form_todo = document.getElementById("form_todo").id;
 
+  // show todo list even if it's empty
   myApp.showToDoList();
-
-  var submit_todo = document.getElementById("submit_todo");
-  var delete_todo = document.getElementsByClassName("delete_todo");
 
   // add new todo
   submit_todo.addEventListener("click", function(e){
     e.preventDefault();
-    var form_todo = document.getElementById("form_todo").id;
     var formValidateReturnedValues = myApp.checkFields(form_todo);
     if(formValidateReturnedValues[0] === true) { // check if everything is ok and form is validated
       myApp.addToDo(formValidateReturnedValues[1], formValidateReturnedValues[2]); // the 2nd and third array's value returned contains the title and description that I use to update the object which is send to JSON
@@ -241,6 +241,7 @@ document.addEventListener("DOMContentLoaded", function(e){
     }
     if($(this).parents("li").hasClass("completed")){
       state = "completed";
+      $(this).parents("li").find(".cancel_cta").removeClass("hidden");
       $(this).removeClass("delete_todo").addClass("modify_todo");
       $(this).find(".cta-text").text(" modify"); // change text from "done" to "modify"
       $(this).removeClass("btn-success").addClass("btn-primary"); // change Bootrstrap class from "btn-success" to "btn-primary"
@@ -251,6 +252,7 @@ document.addEventListener("DOMContentLoaded", function(e){
     } else {
       state = "uncompleted";
       $(this).find(".cta-text").text(" done");
+      $(this).parents("li").find(".cancel_cta").addClass("hidden");
       $(this).removeClass("modify_todo").addClass("delete_todo");
       $(this).removeClass("btn-primary").addClass("btn-success");
       $("#submit_todo").removeAttr("disabled"); // restore btn ADD attribute to "disabled"
@@ -259,6 +261,11 @@ document.addEventListener("DOMContentLoaded", function(e){
       $(this).parents("li").find(".drop_todo").addClass("hidden");
     }
     myApp.toDoCompleted(toDo_id, state);
+  });
+
+  // cancel cta
+  $("#todo_list").on("click", ".cancel_cta", function() {
+    $(this).parents("li").find(".modify_todo").removeClass("modify_todo").addClass("delete_todo");
   });
 
   //delete completed todo
