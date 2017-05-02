@@ -162,13 +162,18 @@ var toDo = function(){
     }
   }
 
+  var resetForm = function(form){
+    form.reset();
+  }
+
   return {
     addToDo: addToDo,
     deleteToDo: deleteToDo,
     showToDoList: showToDoList,
     getTodoList: getTodoList,
     toDoCompleted: toDoCompleted,
-    toggleCompleted: toggleCompleted
+    toggleCompleted: toggleCompleted,
+    resetForm: resetForm
   }
 
 }
@@ -181,6 +186,7 @@ document.addEventListener("DOMContentLoaded", function(e){
 
   var submit_todo = document.getElementById("submit_todo");
   var delete_todo = document.getElementsByClassName("delete_todo");
+  var formId = document.getElementById("form_todo");
 
   // add new todo
   submit_todo.addEventListener("click", function(e){
@@ -196,6 +202,7 @@ document.addEventListener("DOMContentLoaded", function(e){
       myApp.addToDo(title_todo, description_todo);
     }
     myApp.showToDoList();
+    myApp.resetForm(formId);
   });
 
   $("#todo_list").on("click", ".delete_todo", function(e){
