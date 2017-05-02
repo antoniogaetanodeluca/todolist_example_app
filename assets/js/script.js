@@ -1,12 +1,12 @@
 var toDo = function(){
 
-  var data, year, day, month, id;
-  data = new Date();
-  year = data.getFullYear();
-  day = data.getDay();
-  month = data.getMonth();
-
-  var toDoObject = [];
+  var data, year, day, month, id,
+      data = new Date(),
+      year = data.getFullYear(),
+      day = data.getDay(),
+      month = data.getMonth(),
+      formId = document.getElementById("form_todo");
+      toDoObject = [];
 
   var getTodoList = function(){
     try {
@@ -73,13 +73,15 @@ var toDo = function(){
         description: description_todo,
         date: [day, month, year],
         completed: false
-      }
+      };
       toDoObject.unshift(toDo);
       updateToDoList(toDoObject);
-    console.log(toDoObject);
+      console.log(toDoObject);
+      formId.reset();
     } catch(e) {
       console.log(e);
     }
+
   };
 
   var deleteToDo = function(id){
@@ -162,18 +164,47 @@ var toDo = function(){
     }
   }
 
-  var resetForm = function(form){
-    form.reset();
+  var checkFields = function(formId){ // validate the form passed
+    try {
+
+      var formValidated = null,
+          fields = $("form#"+formId).find("input, textarea"),
+          i,
+          emptyFields = 0;
+
+      for(i = 0; i < fields.length; i++){
+        if( (fields[i].tagName.toLowerCase() == "input" && fields[i].type == "text" ) || (fields[i].tagName.toLowerCase() == "textarea") && (fields.length > 0) ){ // check if there's an input or a textarea at least and if relative type and tags are correct
+          if ( (fields[i].value !== "") && ( (fields[i].value).length >= 3) ) { // check if are not empty and at least 3 chars
+            var todo_title = fields[0].value;
+            var todo_description = fields[1].value;
+            fields[i].classList.remove("required");
+          } else {
+            fields[i].classList.add("required");
+            emptyFields++;
+          }
+          if( emptyFields > 0){ // all fields are required so I check the "emptyFields" variable value is not > 0
+            formValidated = false;
+          } else {
+            formValidated = true;
+          }
+        }
+      }
+
+      return [formValidated, todo_title, todo_description];
+
+    } catch(e) {
+      console.log(e);
+    }
   }
 
   return {
-    addToDo: addToDo,
-    deleteToDo: deleteToDo,
-    showToDoList: showToDoList,
+    addToDo: addToDo, // add a todo
+    deleteToDo: deleteToDo, // delete a todo
+    showToDoList: showToDoList, // show the todo list
     getTodoList: getTodoList,
     toDoCompleted: toDoCompleted,
     toggleCompleted: toggleCompleted,
-    resetForm: resetForm
+    checkFields: checkFields // check if every input are validated
   }
 
 }
@@ -186,26 +217,20 @@ document.addEventListener("DOMContentLoaded", function(e){
 
   var submit_todo = document.getElementById("submit_todo");
   var delete_todo = document.getElementsByClassName("delete_todo");
-  var formId = document.getElementById("form_todo");
 
   // add new todo
   submit_todo.addEventListener("click", function(e){
     e.preventDefault();
-    var title_todo = document.getElementById("title_todo").value;
-    var description_todo = document.getElementById("description_todo").value;
-    var form_todo = document.getElementById("form_todo");
-    if( (title_todo.length < 3) || (title_todo.value = "") ){
-      // here a function that checks for required inputs
-    } else if ( (description_todo.length < 4) || (description_todo.value = "") ){
-      // here a function that checks for required inputs
-    } else {
-      myApp.addToDo(title_todo, description_todo);
+    var form_todo = document.getElementById("form_todo").id;
+    var formValidateReturnedValues = myApp.checkFields(form_todo);
+    if(formValidateReturnedValues[0] === true) { // check if everything is ok and form is validated
+      myApp.addToDo(formValidateReturnedValues[1], formValidateReturnedValues[2]); // the 2nd and third array's value returned contains the title and description that I use to update the object which is send to JSON
+      myApp.showToDoList(); // show the list below the form with the last inserted todo
     }
-    myApp.showToDoList();
-    myApp.resetForm(formId);
   });
 
   $("#todo_list").on("click", ".delete_todo", function(e){
+    e.preventDefault();
     var toDo_id = $(this).parents("li").attr("id");
     var state = null;
     $(this).parents("li").toggleClass("completed");
@@ -216,8 +241,9 @@ document.addEventListener("DOMContentLoaded", function(e){
     }
     if($(this).parents("li").hasClass("completed")){
       state = "completed";
+      $(this).removeClass("delete_todo").addClass("modify_todo");
       $(this).find(".cta-text").text(" modify"); // change text from "done" to "modify"
-      $(this).removeClass("btn-success").addClass("btn-primary"); // change Bootrstrap class from "btn-succe" to "btn-primary"
+      $(this).removeClass("btn-success").addClass("btn-primary"); // change Bootrstrap class from "btn-success" to "btn-primary"
       $("#submit_todo").attr("disabled", "disabled"); // set btn ADD attribute to "disabled" to avoid form submit
       $(this).find("i.fa").removeClass("fa-check").addClass("fa-pencil");
       $(this).parents("li").find(".todo_item span.title").addClass("text-completed");
@@ -225,6 +251,7 @@ document.addEventListener("DOMContentLoaded", function(e){
     } else {
       state = "uncompleted";
       $(this).find(".cta-text").text(" done");
+      $(this).removeClass("modify_todo").addClass("delete_todo");
       $(this).removeClass("btn-primary").addClass("btn-success");
       $("#submit_todo").removeAttr("disabled"); // restore btn ADD attribute to "disabled"
       $(this).find("i.fa").removeClass("fa-pencil").addClass("fa-check");
@@ -258,11 +285,5 @@ document.addEventListener("DOMContentLoaded", function(e){
     }
     myApp.toggleCompleted(state, btnID, completedArray);
   });
-
-
-
-
-
-
 
 });
