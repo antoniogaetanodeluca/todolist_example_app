@@ -145,18 +145,20 @@ var toDo = function(){
   var toggleCompleted = function(state, id, completedArray){
     try {
       var btnId = "#"+id;
-      if(state === "hide"){
-        $(btnId).find("i").removeClass("fa-eye-slash").addClass("fa-eye");
-        $(btnId).find(".cta-text").text(" show completed");
-        $("#todo_list li.completed").each(function (){
-          $(this).addClass("hidden");
-        });
-      } else {
-        $(btnId).find("i").removeClass("fa-eye").addClass("fa-eye-slash");
-        $(btnId).find(".cta-text").text(" hide completed");
-        $("#todo_list li.completed").each(function (){
-          $(this).removeClass("hidden");
-        });
+      if(typeof completed !== 'undefined' && completedArray.length > 0){
+        if(state === "hide"){
+          $(btnId).find("i").removeClass("fa-eye-slash").addClass("fa-eye");
+          $(btnId).find(".cta-text").text(" show completed");
+          $("#todo_list li.completed").each(function (){
+            $(this).addClass("hidden");
+          });
+        } else {
+          $(btnId).find("i").removeClass("fa-eye").addClass("fa-eye-slash");
+          $(btnId).find(".cta-text").text(" hide completed");
+          $("#todo_list li.completed").each(function (){
+            $(this).removeClass("hidden");
+          });
+        }
       }
       console.log(completedArray);
     } catch(e) {
@@ -265,7 +267,14 @@ document.addEventListener("DOMContentLoaded", function(e){
 
   // cancel cta
   $("#todo_list").on("click", ".cancel_cta", function() {
-    $(this).parents("li").find(".modify_todo").removeClass("modify_todo").addClass("delete_todo");
+    $(this).parents("li").toggleClass("completed");
+    $(this).parents("li").find(".modify_todo").removeClass("modify_todo btn-primary").addClass("delete_todo btn-success");
+    $(this).parents("li").find(".cancel_cta").addClass("hidden");
+    $(this).parents("li").find(".delete_todo .cta-text").text(" done");
+    $(this).parents("li").find(".delete_todo").find("i.fa").removeClass("fa-pencil").addClass("fa-check");
+    $(this).parents("li").find(".todo_item span.title").removeClass("text-completed");
+    $(this).parents("li").find(".drop_todo").addClass("hidden");
+    $("#submit_todo").removeAttr("disabled"); // restore btn ADD attribute to "disabled"
   });
 
   //delete completed todo
