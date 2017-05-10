@@ -57,7 +57,7 @@ var toDo = function(){
         li_year = k.date[2];
         li_content = "<div class='todo_item'><span class='title'><h2>"+li_title+"</h2></span><span class='date'>"+li_year+"</span><span class='description'><p>"+li_description+"</p></span><button class='delete_todo btn btn-success'><i class='fa fa-check' aria-hidden='true'></i><span class='cta-text'> done</span></button><button class='drop_todo btn btn-danger hidden'>delete</button> <button class='cancel_cta btn btn-default hidden'>cancel</button></div>";
         li.innerHTML = li_content;
-        ul_list.appendChild(li);
+        ul_list.prepend(li);
       });
     } catch(e) {
       console.log(e);
@@ -220,6 +220,35 @@ var toDo = function(){
     }
   };
 
+  var modifyTodo = function(idToModify){
+    try {
+      var obj = getTodoList(),
+          id, title, description,
+          stateForm = "enabled",
+          stateModify = null;
+      obj.forEach(function(k){
+        if(idToModify == k.id){
+          id = k.id;
+          title = k.title;
+          description = k.description;
+
+          $("form").find("input").val(title);
+          $("form").find("textarea").val(description);
+
+          $("#hide_completed_todo").attr("disabled", "disabled");
+          $("#submit_todo, #title_todo, #description_todo").removeAttr("disabled");
+          $("#submit_todo").addClass("hidden");
+          $("#modify_todo").removeClass("hidden");
+        }
+      });
+      stateModify = "enabled";
+      return stateModify;
+
+    } catch(e) {
+      console.error(e);
+    }
+  }
+
   var stateForm = function(stateForm){
     try {
       if(stateForm === "disabled"){
@@ -230,7 +259,7 @@ var toDo = function(){
     } catch(e) {
       console.error(e);
     }
-  }
+  };
 
   return {
     addToDo: addToDo,
@@ -241,7 +270,8 @@ var toDo = function(){
     toggleCompleted: toggleCompleted,
     checkFields: checkFields,
     deleteAllTodos:deleteAllTodos,
-    stateForm: stateForm
+    stateForm: stateForm,
+    modifyTodo: modifyTodo
   }
 
 }
@@ -267,6 +297,7 @@ document.addEventListener("DOMContentLoaded", function(e){ // Javascript Documen
     }
   });
 
+  //check as completed
   $("#todo_list").on("click", ".delete_todo", function(e){
     e.preventDefault();
     var toDo_id = $(this).parents("li").attr("id");
@@ -387,6 +418,18 @@ document.addEventListener("DOMContentLoaded", function(e){ // Javascript Documen
     }
 
     myApp.toggleCompleted(state, btnID, completedArray);
+  });
+
+  //modify todo
+  var stateModifyResponse;
+  $("#todo_list").on("click", ".modify_todo", function(){
+    var idToModify = $(this).parents("li").attr("id");
+    stateModifyResponse = myApp.modifyTodo(idToModify);
+  });
+  $("#modify_todo").on("click", function(){
+    if(stateModifyResponse === "enabled"){
+      
+    }
   });
 
 });

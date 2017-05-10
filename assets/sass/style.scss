@@ -42,6 +42,10 @@ body {
     textarea:focus, input:focus{
       outline: none;
     }
+    input:disabled, textarea:disabled {
+      background: #f2f2f2;
+      cursor: not-allowed;
+    }
   }
 
   .ul_reset {

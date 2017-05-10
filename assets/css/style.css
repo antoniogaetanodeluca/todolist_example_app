@@ -39,6 +39,10 @@ body {
 #wrapper form textarea:focus, #wrapper form input:focus {
   outline: none;
 }
+#wrapper form input:disabled, #wrapper form textarea:disabled {
+  background: #f2f2f2;
+  cursor: not-allowed;
+}
 #wrapper .ul_reset {
   margin: 30px 0;
   padding: 0;
