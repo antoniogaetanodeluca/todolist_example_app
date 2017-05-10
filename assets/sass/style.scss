@@ -6,6 +6,7 @@ body {
   background: #fff;
 }
 
+
 #wrapper {
   padding: 50px 0;
 
@@ -36,6 +37,10 @@ body {
       width: 100%;
       font-size: 14px;
       text-transform: uppercase;
+    }
+
+    textarea:focus, input:focus{
+      outline: none;
     }
   }
 

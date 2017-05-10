@@ -102,6 +102,24 @@ var toDo = function(){
     }
   };
 
+  var deleteAllTodos = function(toDosId) { // delete all the Todos passed in the Array
+    for(var i = 0; i < toDosId.length; i++){
+      var id = toDosId[i];
+      for(var j = 0; j < toDoObject.length; j++){
+        if(toDoObject[j].id == id){
+          toDoObject.splice(j, 1);
+          $("#todo_list").find("li#" + id).remove();
+          if($("#todo_list").find("li").length === 0){
+            $("#todo_list").text("Nothing to do. Take you first note, now!");
+            $("#submit_todo").removeAttr("disabled");
+            $("#hide_completed_todo").addClass("hidden");
+          }
+        }
+      }
+    }
+    console.log(toDoObject);
+  };
+
   var toDoCompleted = function(id, state){
     try {
       var obj = getTodoList();
@@ -145,7 +163,7 @@ var toDo = function(){
   var toggleCompleted = function(state, id, completedArray){
     try {
       var btnId = "#"+id;
-      if(typeof completed !== 'undefined' && completedArray.length > 0){
+    //  if(typeof completedArray !== 'undefined' && completedArray.length > 0){
         if(state === "hide"){
           $(btnId).find("i").removeClass("fa-eye-slash").addClass("fa-eye");
           $(btnId).find(".cta-text").text(" show completed");
@@ -159,12 +177,12 @@ var toDo = function(){
             $(this).removeClass("hidden");
           });
         }
-      }
+    //  }
       console.log(completedArray);
     } catch(e) {
       console.log(e);
     }
-  }
+  };
 
   var checkFields = function(formId){ // validate the form passed
     try {
@@ -197,7 +215,7 @@ var toDo = function(){
     } catch(e) {
       console.log(e);
     }
-  }
+  };
 
   return {
     addToDo: addToDo,
@@ -206,12 +224,13 @@ var toDo = function(){
     getTodoList: getTodoList,
     toDoCompleted: toDoCompleted,
     toggleCompleted: toggleCompleted,
-    checkFields: checkFields
+    checkFields: checkFields,
+    deleteAllTodos:deleteAllTodos
   }
 
 }
 
-document.addEventListener("DOMContentLoaded", function(e){
+document.addEventListener("DOMContentLoaded", function(e){ // Javascript Document Ready alternative to jQuery one
 
   var myApp = new toDo;
   var submit_todo = document.getElementById("submit_todo"),
@@ -241,6 +260,11 @@ document.addEventListener("DOMContentLoaded", function(e){
     } else {
       $("#hide_completed_todo").addClass("hidden");
     }
+
+    if($("#todo_list li.completed").length > 1) {
+      $("#delete_all_todo").removeClass("hidden");
+    }
+
     if($(this).parents("li").hasClass("completed")){
       state = "completed";
       $(this).parents("li").find(".cancel_cta").removeClass("hidden");
@@ -275,12 +299,26 @@ document.addEventListener("DOMContentLoaded", function(e){
     $(this).parents("li").find(".todo_item span.title").removeClass("text-completed");
     $(this).parents("li").find(".drop_todo").addClass("hidden");
     $("#submit_todo").removeAttr("disabled"); // restore btn ADD attribute to "disabled"
+
+    if($("#todo_list li.completed").length === 1) {
+      $("#delete_all_todo").addClass("hidden");
+    }
   });
 
   //delete completed todo
   $("#todo_list").on("click", ".drop_todo", function() {
     var toDoId = $(this).parents("li").attr("id");
     myApp.deleteToDo(toDoId);
+  });
+
+  //delete all completed todos
+  $("#delete_all_todo").on("click", function(){
+    var toDosId = [];
+    $("#todo_list").find("li.completed").each(function (){
+      var toDoIdToDelete = $(this).attr("id");
+      toDosId.push(toDoIdToDelete);
+    });
+    myApp.deleteAllTodos(toDosId);
   });
 
   //show - hide completed todos
